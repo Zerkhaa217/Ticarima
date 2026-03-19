@@ -1,0 +1,8 @@
+<?php
+$db_host = "localhost";
+$db_name = "ticarima";
+$db_user = "root";
+$db_pass = "SENIN_SIFREN";
+$groq_api_key = "xai-xxx";
+$news_api_key = "xxx";
+?>
