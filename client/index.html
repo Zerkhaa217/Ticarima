@@ -3,52 +3,27 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <style>
-        :root { --neon: #00f2ff; --bg: #050505; }
-        body { background: var(--bg); color: #fff; font-family: 'Courier New', monospace; }
-        .cyber-card { background: #111; border: 1px solid var(--neon); border-radius: 15px; box-shadow: 0 0 10px rgba(0,242,255,0.2); }
-        .neon-text { color: var(--neon); text-shadow: 0 0 5px var(--neon); }
-        .btn-jarvis { border: 1px solid var(--neon); color: var(--neon); background: transparent; }
-        .btn-jarvis:hover { background: var(--neon); color: #000; }
-    </style>
+    <title>Ticarima V41 - Private Chat</title>
 </head>
-<body class="p-4">
-    <h1 class="text-center neon-text">Ticarima V40 - Jarvis UI</h1>
-    <div class="row">
-        <div class="col-md-8">
-            <div class="cyber-card p-3 mb-3">
-                <h4 class="neon-text">Borsa Piyasası</h4>
-                <div id="market" class="row"></div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="cyber-card p-3">
-                <h4 class="neon-text">Kasa & Durum</h4>
-                <p id="stats">Kasa: 0 TL | LVL: 1</p>
-            </div>
-            <div class="cyber-card p-3 mt-3">
-                <h4 class="neon-text">Global Chat</h4>
-                <div id="chat" style="height:150px; overflow-y:scroll; font-size: 12px;"></div>
-                <input id="msg" class="form-control bg-black text-white mt-2" placeholder="Mesaj...">
-            </div>
-        </div>
-    </div>
+<body class="bg-dark text-light p-4">
+    <h1 class="text-primary">Ticarima V41 - Private Chat</h1>
+    <div id="chat" style="height:200px; overflow-y:scroll; border:1px solid #333" class="mb-2"></div>
+    <select id="recipient" class="form-control bg-dark text-white mb-2">
+        <option value="">Herkese</option>
+    </select>
+    <input type="text" id="msgInput" class="form-control bg-dark text-white" placeholder="Mesaj...">
+    <button class="btn btn-info mt-2" onclick="send()">Gönder</button>
+
     <script>
         const socket = io('http://34.57.223.210:3000');
-        socket.on('update', (data) => {
-            document.getElementById('market').innerHTML = data.companies.map(c => `
-                <div class="col-6 mb-2">
-                    <div class="card bg-black p-2 border-info">
-                        <span class="neon-text">${c.name}</span><br>
-                        <b>${c.price.toFixed(2)} TL</b><br>
-                        <button class="btn btn-sm btn-jarvis" onclick="trade('BUY', ${c.id})">AL</button>
-                    </div>
-                </div>
-            `).join('');
-            document.getElementById('stats').innerText = `Kasa: ${data.user.cash.toFixed(2)} TL | LVL: ${data.user.level}`;
+        socket.on('chatMessage', (data) => {
+            document.getElementById('chat').innerHTML += `<div><b>${data.user}:</b> ${data.text}</div>`;
         });
-        function trade(action, id) {
-            socket.emit('trade', { action, companyId: id });
+        function send() {
+            const text = document.getElementById('msgInput').value;
+            const to = document.getElementById('recipient').value;
+            socket.emit('chatMessage', { user: "Zen", text, to });
+            document.getElementById('msgInput').value = "";
         }
     </script>
 </body>
