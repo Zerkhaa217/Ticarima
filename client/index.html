@@ -2,29 +2,29 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Ticarima V38 - RPG/Missions</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <title>Ticarima V39 - Global Chat</title>
 </head>
 <body class="bg-dark text-light p-4">
-    <h1 class="text-warning">Ticarima V38 - Görevler & Başarılar</h1>
-    <div class="row mt-3">
-        <div class="col-md-6" id="quest-log">
-            <h3>📖 Görev Listesi</h3>
-            <ul class="list-group">
-                <li class="list-group-item bg-dark text-light">1.000.000 TL Kasa</li>
-                <li class="list-group-item bg-dark text-light">ZenTech'i Sabote Et</li>
-            </ul>
-        </div>
-        <div class="col-md-6" id="achievement-center">
-            <h3>🎖️ Başarı Merkezi</h3>
-            <button class="btn btn-primary" onclick="checkAchievements()">Rozetleri Kontrol Et</button>
-            <div id="badges" class="mt-2"></div>
-        </div>
-    </div>
+    <h1 class="text-primary">Ticarima V39 - Global Chat</h1>
+    
+    <div id="chat" class="bg-black p-3 mb-4" style="height:200px; overflow-y:scroll; border:1px solid #333"></div>
+    <input type="text" id="msgInput" class="form-control bg-dark text-white" placeholder="Mesaj yaz...">
+    <button class="btn btn-info mt-2" onclick="send()">Gönder</button>
+
     <script>
-        async function checkAchievements() {
-            const res = await fetch('../server/achievements.php', { method: 'POST' });
-            const data = await res.json();
-            document.getElementById('badges').innerHTML = data.badges ? data.badges.map(b => `<span class="badge bg-gold">${b}</span>`).join(' ') : "Henüz rozet yok!";
+        const socket = io('http://34.57.223.210:3000');
+        const chat = document.getElementById('chat');
+        
+        socket.on('chatMessage', (data) => {
+            chat.innerHTML += `<div><b>${data.user}:</b> ${data.text} <small class="text-muted">(${data.time})</small></div>`;
+            chat.scrollTop = chat.scrollHeight;
+        });
+
+        function send() {
+            const text = document.getElementById('msgInput').value;
+            socket.emit('chatMessage', { user: "Zen", text: text });
+            document.getElementById('msgInput').value = "";
         }
     </script>
 </body>
