@@ -2,22 +2,20 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Ticarima V43 - Guild & P2P</title>
+    <title>Ticarima V44 - Market News</title>
 </head>
 <body class="bg-dark text-light p-4">
-    <h1 class="text-info">Ticarima V43 - Guild & Trade</h1>
-    <div id="app" class="container mt-3">
-        <button class="btn btn-warning" onclick="mergeCompany(1)">Şirket Birleştir (Guild)</button>
-        <button class="btn btn-success" onclick="tradeP2P(1, 2)">Arkadaşa Hisse Devret</button>
+    <h1 class="text-danger">Ticarima V44 - Macro Events</h1>
+    <div id="ticker" class="alert alert-warning">Piyasa stabil.</div>
+    <div class="container mt-3">
+        <button class="btn btn-outline-danger" onclick="triggerNews()">Global Piyasa Olayı</button>
     </div>
     <script>
-        async function mergeCompany(id) {
-            await fetch('../server/merge.php', { method: 'POST', body: JSON.stringify({companyId: id}) });
-            alert("Şirket birleşti!");
-        }
-        async function tradeP2P(compId, friendId) {
-            await fetch('../server/p2p_trade.php', { method: 'POST', body: JSON.stringify({companyId: compId, friendId: friendId}) });
-            alert("Hisse arkadaşına devredildi!");
+        async function triggerNews() {
+            const res = await fetch('../server/market_news.php', { method: 'POST' });
+            const data = await res.json();
+            document.getElementById('ticker').innerText = "Son Haber: " + data.news;
+            alert("Piyasa Etkisi: " + data.news);
         }
     </script>
 </body>
