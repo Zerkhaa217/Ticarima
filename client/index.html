@@ -2,27 +2,29 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-    <title>Ticarima Real-Time</title>
+    <title>Ticarima V38 - RPG/Missions</title>
 </head>
 <body class="bg-dark text-light p-4">
-    <h1 class="text-success">Ticarima Real-Time (Online)</h1>
-    <div id="app" class="container mt-3">
-        <h4 id="user-stats">Kasa: 5000 TL</h4>
-        <div id="market"></div>
+    <h1 class="text-warning">Ticarima V38 - Görevler & Başarılar</h1>
+    <div class="row mt-3">
+        <div class="col-md-6" id="quest-log">
+            <h3>📖 Görev Listesi</h3>
+            <ul class="list-group">
+                <li class="list-group-item bg-dark text-light">1.000.000 TL Kasa</li>
+                <li class="list-group-item bg-dark text-light">ZenTech'i Sabote Et</li>
+            </ul>
+        </div>
+        <div class="col-md-6" id="achievement-center">
+            <h3>🎖️ Başarı Merkezi</h3>
+            <button class="btn btn-primary" onclick="checkAchievements()">Rozetleri Kontrol Et</button>
+            <div id="badges" class="mt-2"></div>
+        </div>
     </div>
     <script>
-        const socket = io('http://34.57.223.210:3000');
-        socket.on('update', (data) => {
-            document.getElementById('market').innerHTML = data.companies.map(c => `
-                <div class="card bg-black p-2 m-1">
-                    ${c.name}: ${c.price.toFixed(2)} TL
-                    <button class="btn btn-sm btn-success" onclick="trade('BUY', ${c.id})">AL</button>
-                </div>
-            `).join('');
-        });
-        function trade(action, companyId) {
-            socket.emit('trade', { action, companyId });
+        async function checkAchievements() {
+            const res = await fetch('../server/achievements.php', { method: 'POST' });
+            const data = await res.json();
+            document.getElementById('badges').innerHTML = data.badges ? data.badges.map(b => `<span class="badge bg-gold">${b}</span>`).join(' ') : "Henüz rozet yok!";
         }
     </script>
 </body>
