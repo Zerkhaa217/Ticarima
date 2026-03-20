@@ -2,20 +2,27 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Ticarima V37 - RPG</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <title>Ticarima Real-Time</title>
 </head>
 <body class="bg-dark text-light p-4">
-    <h1 class="text-danger">Ticarima V37 - Global Event System</h1>
-    <div id="event-log" class="alert alert-info">Piyasa Olayı Bekleniyor...</div>
-    <div class="container mt-3">
-        <button class="btn btn-outline-warning" onclick="triggerEncounter()">Rastgele Olay (RPG)</button>
+    <h1 class="text-success">Ticarima Real-Time (Online)</h1>
+    <div id="app" class="container mt-3">
+        <h4 id="user-stats">Kasa: 5000 TL</h4>
+        <div id="market"></div>
     </div>
     <script>
-        async function triggerEncounter() {
-            const res = await fetch('../server/random_encounter.php', { method: 'POST' });
-            const data = await res.json();
-            document.getElementById('event-log').innerText = "Olay: " + data.msg;
-            alert("Olay: " + data.msg);
+        const socket = io('http://34.57.223.210:3000');
+        socket.on('update', (data) => {
+            document.getElementById('market').innerHTML = data.companies.map(c => `
+                <div class="card bg-black p-2 m-1">
+                    ${c.name}: ${c.price.toFixed(2)} TL
+                    <button class="btn btn-sm btn-success" onclick="trade('BUY', ${c.id})">AL</button>
+                </div>
+            `).join('');
+        });
+        function trade(action, companyId) {
+            socket.emit('trade', { action, companyId });
         }
     </script>
 </body>
