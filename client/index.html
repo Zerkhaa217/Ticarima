@@ -2,20 +2,19 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Ticarima V44 - Market News</title>
+    <title>Ticarima V45 - VIP</title>
 </head>
 <body class="bg-dark text-light p-4">
-    <h1 class="text-danger">Ticarima V44 - Macro Events</h1>
-    <div id="ticker" class="alert alert-warning">Piyasa stabil.</div>
-    <div class="container mt-3">
-        <button class="btn btn-outline-danger" onclick="triggerNews()">Global Piyasa Olayı</button>
+    <h1 class="text-warning">Ticarima V45 - Premium</h1>
+    <div class="card bg-black p-3 text-center border-warning">
+        <button class="btn btn-warning" onclick="unlockPremium()">VIP Üyelik Satın Al (50.000 TL)</button>
+        <p class="mt-2">Avantajlar: 0 Vergi, 2x Üretim, Özel Rozet</p>
     </div>
     <script>
-        async function triggerNews() {
-            const res = await fetch('../server/market_news.php', { method: 'POST' });
+        async function unlockPremium() {
+            const res = await fetch('../server/premium_upgrade.php', { method: 'POST' });
             const data = await res.json();
-            document.getElementById('ticker').innerText = "Son Haber: " + data.news;
-            alert("Piyasa Etkisi: " + data.news);
+            alert(data.msg);
         }
     </script>
 </body>
