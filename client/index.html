@@ -2,17 +2,36 @@
 <html>
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Ticarima V45 - VIP</title>
+    <title>Ticarima V46 - Premium Store</title>
 </head>
 <body class="bg-dark text-light p-4">
-    <h1 class="text-warning">Ticarima V45 - Premium</h1>
-    <div class="card bg-black p-3 text-center border-warning">
-        <button class="btn btn-warning" onclick="unlockPremium()">VIP Üyelik Satın Al (50.000 TL)</button>
-        <p class="mt-2">Avantajlar: 0 Vergi, 2x Üretim, Özel Rozet</p>
+    <h1 class="text-warning">Ticarima VIP Store</h1>
+    <div class="row mt-3">
+        <div class="col-md-4">
+            <div class="card bg-black p-3">
+                <h5>Bronze VIP (100 TL)</h5>
+                <p>+5% Üretim Hızı</p>
+                <button class="btn btn-warning" onclick="buyVip(1)">Satın Al</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-black p-3">
+                <h5>Silver VIP (500 TL)</h5>
+                <p>+15% Üretim Hızı</p>
+                <button class="btn btn-secondary" onclick="buyVip(2)">Satın Al</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-black p-3">
+                <h5>Gold VIP (2000 TL)</h5>
+                <p>0% Vergi + 2x Üretim</p>
+                <button class="btn btn-primary" onclick="buyVip(3)">Satın Al</button>
+            </div>
+        </div>
     </div>
     <script>
-        async function unlockPremium() {
-            const res = await fetch('../server/premium_upgrade.php', { method: 'POST' });
+        async function buyVip(tier) {
+            const res = await fetch('../server/purchase_vip.php', { method: 'POST', body: JSON.stringify({tier: tier}) });
             const data = await res.json();
             alert(data.msg);
         }
